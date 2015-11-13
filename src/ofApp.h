@@ -2,11 +2,20 @@
 
 #include "ofMain.h"
 #include "ray.h"
+#include "LightParticle.h"
 
 class ofApp : public ofBaseApp{
     private:
         vector<Ray> rays;
+        vector<LightParticle> particles;
     
+        vector<ofPolyline> normals;
+    
+        std::map<int, float> refraction_lookup;
+    
+        void initLookup();
+    
+    bool mouse_pressed = false;
     
 	public:
 		void setup();
@@ -16,6 +25,7 @@ class ofApp : public ofBaseApp{
     ofPolyline prism;
     
     ofPoint mouse_press_pos;
+    
     
     
 		

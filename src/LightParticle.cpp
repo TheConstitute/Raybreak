@@ -14,6 +14,8 @@ void LightParticle::init(ofPoint p, ofVec2f d, float refIndex, float w){
     refraction_index = refIndex;
     color = waveLengthToRGB(wavelength);
     direction = d;
+    creationTime = ofGetElapsedTimeMillis();
+    lastIntersection = creationTime;
 }
 
 void LightParticle::setDirection(ofVec2f d){
@@ -24,32 +26,60 @@ ofVec2f LightParticle::getDirection(){
     return direction;
 }
 
-void LightParticle::setFrequency(float w){
+void LightParticle::setWavelength(int w){
     wavelength = w;
-    color = waveLengthToRGB(wavelength);
+    ofColor c = waveLengthToRGB(wavelength);
+}
+
+int LightParticle::getWavelength(){
+    return wavelength;
 }
 
 void LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
-    float angle = direction.angle(normal);
     
-    // calculate new direction
-    double new_angle = asin( indexNewMedium/refraction_index * sin((PI/180.0) * angle)) * (180.0/PI);
-    refraction_index = indexNewMedium;
+    // HACK: Um doppelte reflexionen zu vermeiden. Das Problem sollte aber eigentlich woanders behoben werden!
+    long deltaTime = ofGetElapsedTimeMillis() - lastIntersection;
+    if(deltaTime < 30) return;
+    
+    lastIntersection = ofGetElapsedTimeMillis();
+    
+    // die normale steht auf der geraden in richtung des einfallenden strahls
+    // um hier den richtigen winkel zu bekommen, muss sie aber genau andersherum definiert sein
     normal.rotate(180);
+    float angle = direction.angle(normal);
+    //ofLog() << angle;
     
-    ofPolyline p;
-    p.addVertex(position);
-    p.addVertex(position + normal.scale(10));
-    turnedNormals.push_back(p);
+    // totalreflexion?
+    if(indexNewMedium < refraction_index &&
+       fabs(angle) > asin(indexNewMedium/refraction_index) * (180.0/PI)){
+//        ofLog() << "totalreflexion";
+        if(angle > 0) direction.rotate(-90);
+        else direction.rotate(90);
+    }
+    else{
+        // calculate new direction
+        double new_angle = asin( (refraction_index/indexNewMedium) * sin((PI/180.0) * angle)) * (180.0/PI);
+        
+        //ofLog() << angle << "(" << refraction_index << ") => " << new_angle << "(" << indexNewMedium << ") // " << deltaTime;
+        
+        refraction_index = indexNewMedium;
     
-    normal.normalize();
-    normal.rotate(new_angle);
-    direction = normal;
+        direction.rotate(angle - new_angle);
     
-    ofPolyline d;
-    d.addVertex(position);
-    d.addVertex(position + normal.scale(20));
-    newDirections.push_back(d);
+//        ofPolyline p;
+//        p.addVertex(position);
+//        p.addVertex(position + normal.scale(10));
+//        turnedNormals.push_back(p);
+//        
+//        normal.normalize();
+//        normal.rotate(new_angle);
+//        direction = normal;
+//        
+//        ofPolyline d;
+//        d.addVertex(position);
+//        d.addVertex(position + normal.scale(50));
+//        newDirections.push_back(d);
+    }
 }
 
 ofVec2f LightParticle::getPosition(){
@@ -63,18 +93,20 @@ void LightParticle::update(){
 void LightParticle::draw(){
     ofPushStyle();
     ofSetColor(color);
-    ofDrawCircle(position, 5);
+    ofDrawCircle(position, 4);
 
 //    ofDrawLine(position, position + (direction));
-//    ofDrawBitmapString(refraction_index, position);
+//    ofSetColor(0, 0, 0);
+//    ofDrawBitmapString(refraction_index, position + ofVec2f(5, -5));
 
     ofSetColor(200, 0, 0);
     for (int i=0; i< turnedNormals.size(); i++)
         turnedNormals[i].draw();
     
-    ofSetColor(200, 0, 255);
+    ofSetColor(0, 0, 0);
     for (int i=0; i< newDirections.size(); i++)
         newDirections[i].draw();
+    
     ofPopStyle();
 }
 

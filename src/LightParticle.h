@@ -15,7 +15,7 @@
 class LightParticle {
     
 private:
-    float wavelength;
+    int wavelength;
     ofPoint position;
     ofVec2f direction;
     ofColor color;
@@ -26,11 +26,16 @@ private:
     vector<ofPolyline> turnedNormals;
     vector<ofPolyline> newDirections;
     
+    long lastIntersection;
+    long creationTime;
+    
 public:
     void init(ofPoint position, ofVec2f direction, float refractionIndex, float frequency);
     void setDirection(ofVec2f direction);
     ofVec2f getDirection();
-    void setFrequency(float frequency);
+    void setWavelength(int wavelength);
+    int getWavelength();
+    
     void setSpeed(float speed);
     void hitBorder(ofVec2f normal, float indexNewMedium);
     float getRefractionIndex();
