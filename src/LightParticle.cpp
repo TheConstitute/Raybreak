@@ -8,7 +8,14 @@
 
 #include "LightParticle.h"
 
-void LightParticle::init(ofPoint p, ofVec2f d, float refIndex, float w){
+int LightParticle::last_id = 0;
+
+LightParticle::LightParticle() : particle_id(++last_id){
+    
+}
+
+// Konstruktor
+LightParticle::LightParticle(ofPoint p, ofVec2f d, float refIndex, float w) : particle_id(++last_id){
     position = p;
     wavelength = w;
     refraction_index = refIndex;
@@ -16,6 +23,41 @@ void LightParticle::init(ofPoint p, ofVec2f d, float refIndex, float w){
     direction = d;
     creationTime = ofGetElapsedTimeMillis();
     lastIntersection = creationTime;
+}
+
+// Copy-Konstruktor
+LightParticle::LightParticle(const LightParticle& lp) : particle_id(lp.particle_id){
+    position = lp.position;
+    wavelength = lp.wavelength;
+    refraction_index = lp.refraction_index;
+    color = lp.color;
+    direction = lp.direction;
+    creationTime = lp.creationTime;
+    lastIntersection = lp.lastIntersection;
+    points = lp.points;
+}
+
+bool LightParticle::operator==(const LightParticle &p){
+    if(p.getId() == particle_id){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+LightParticle& LightParticle::operator=(const LightParticle &lp){
+    if(this != &lp){
+        position = lp.position;
+        wavelength = lp.wavelength;
+        refraction_index = lp.refraction_index;
+        color = lp.color;
+        direction = lp.direction;
+        creationTime = lp.creationTime;
+        lastIntersection = lp.lastIntersection;
+        points = lp.points;
+    }
+    return *this;
 }
 
 void LightParticle::setDirection(ofVec2f d){
@@ -26,20 +68,20 @@ ofVec2f LightParticle::getDirection(){
     return direction;
 }
 
-void LightParticle::setWavelength(int w){
+void LightParticle::setWavelength(float w){
     wavelength = w;
-    ofColor c = waveLengthToRGB(wavelength);
+    color = waveLengthToRGB(wavelength);
 }
 
-int LightParticle::getWavelength(){
+float LightParticle::getWavelength(){
     return wavelength;
 }
 
-void LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
-    
-    // HACK: Um doppelte reflexionen zu vermeiden. Das Problem sollte aber eigentlich woanders behoben werden!
-    long deltaTime = ofGetElapsedTimeMillis() - lastIntersection;
-    if(deltaTime < 30) return;
+int LightParticle::getId() const{
+    return particle_id;
+}
+
+bool LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
     
     lastIntersection = ofGetElapsedTimeMillis();
     
@@ -47,38 +89,34 @@ void LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
     // um hier den richtigen winkel zu bekommen, muss sie aber genau andersherum definiert sein
     normal.rotate(180);
     float angle = direction.angle(normal);
-    //ofLog() << angle;
     
     // totalreflexion?
     if(indexNewMedium < refraction_index &&
        fabs(angle) > asin(indexNewMedium/refraction_index) * (180.0/PI)){
-//        ofLog() << "totalreflexion";
-        if(angle > 0) direction.rotate(-90);
-        else direction.rotate(90);
+        
+        // winkel nach totalreflexion. einfallswinkel = ausfallswinkel
+        direction.rotate(-2.0*(90.0-angle));
+        
+        return true;
     }
+    
     else{
+        splitted = true;
+        
         // calculate new direction
         double new_angle = asin( (refraction_index/indexNewMedium) * sin((PI/180.0) * angle)) * (180.0/PI);
         
-        //ofLog() << angle << "(" << refraction_index << ") => " << new_angle << "(" << indexNewMedium << ") // " << deltaTime;
+        // set new direction
+        direction.rotate(angle - new_angle);
+        
+        // set new speed
+        setSpeed(direction.length() * (refraction_index/indexNewMedium));
         
         refraction_index = indexNewMedium;
-    
-        direction.rotate(angle - new_angle);
-    
-//        ofPolyline p;
-//        p.addVertex(position);
-//        p.addVertex(position + normal.scale(10));
-//        turnedNormals.push_back(p);
-//        
-//        normal.normalize();
-//        normal.rotate(new_angle);
-//        direction = normal;
-//        
-//        ofPolyline d;
-//        d.addVertex(position);
-//        d.addVertex(position + normal.scale(50));
-//        newDirections.push_back(d);
+        
+        //ofLog() << wavelength << ", " << refraction_index << ", " << direction.length();
+        
+        return false;
     }
 }
 
@@ -87,26 +125,43 @@ ofVec2f LightParticle::getPosition(){
 }
 
 void LightParticle::update(){
-    position += direction;
+    if(!outsideView){
+        // check if particle is outside the view
+        if(position.x > ofGetWidth() || position.x < 0 || position.y > ofGetHeight() || position.y < 0){
+            outsideView = true;
+            return;
+        }
+        
+        this->position += direction;
+        points.push_back(Punkt(position));
+    }
+}
+
+void LightParticle::setPosition(ofPoint pos){
+    points.push_back(Punkt(pos));
+    position = pos;
 }
 
 void LightParticle::draw(){
+    if(fadedOut) return;
+    
     ofPushStyle();
-    ofSetColor(color);
-    ofDrawCircle(position, 4);
 
-//    ofDrawLine(position, position + (direction));
-//    ofSetColor(0, 0, 0);
-//    ofDrawBitmapString(refraction_index, position + ofVec2f(5, -5));
+    ofSetLineWidth(3);
+    
+    for(int i=0; i< points.size() - 1; i++){
+        if(points[i].alpha > 0){
+            if(splitted)
+                points[i].alpha -= 5.0;
+            else
+                points[i].alpha -= 20.0;
+            
+            ofSetColor(color.r, color.g, color.b, points[i].alpha);
+            ofDrawLine(points[i].position, points[i+1].position);
+        }
+        
+    }
 
-    ofSetColor(200, 0, 0);
-    for (int i=0; i< turnedNormals.size(); i++)
-        turnedNormals[i].draw();
-    
-    ofSetColor(0, 0, 0);
-    for (int i=0; i< newDirections.size(); i++)
-        newDirections[i].draw();
-    
     ofPopStyle();
 }
 
@@ -118,6 +173,9 @@ float LightParticle::getRefractionIndex(){
     return refraction_index;
 }
 
+ofColor LightParticle::getColor(){
+    return color;
+}
 
 
 /** Taken from Earl F. Glynn's web page:

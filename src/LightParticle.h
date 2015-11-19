@@ -15,31 +15,55 @@
 class LightParticle {
     
 private:
-    int wavelength;
+    static int last_id;
+    
+    const int particle_id;
+    float wavelength;
     ofPoint position;
     ofVec2f direction;
     ofColor color;
     float refraction_index;
     
-    ofColor waveLengthToRGB(double Wavelength);
+    struct Punkt {
+        ofPoint position;
+        long timestamp;
+        float alpha;
+        Punkt(ofPoint p){ position = p; timestamp = ofGetElapsedTimeMillis(); alpha = 255; }
+    };
     
-    vector<ofPolyline> turnedNormals;
-    vector<ofPolyline> newDirections;
+    vector<Punkt> points;
     
     long lastIntersection;
     long creationTime;
+    float diameter = 10;
+    
+    bool splitted = false;
+
+    ofColor waveLengthToRGB(double Wavelength);
+    
+    bool outsideView = false;
+    bool fadedOut = false;
     
 public:
-    void init(ofPoint position, ofVec2f direction, float refractionIndex, float frequency);
+    LightParticle();
+    LightParticle(ofPoint position, ofVec2f direction, float refractionIndex, float frequency);
+    LightParticle(const LightParticle& lp);
+    bool operator==(const LightParticle &p);
+    LightParticle& operator=(const LightParticle &p);
+    
     void setDirection(ofVec2f direction);
     ofVec2f getDirection();
-    void setWavelength(int wavelength);
-    int getWavelength();
+    void setWavelength(float wavelength);
+    float getWavelength();
+    int getId() const;
     
+    ofColor getColor();
     void setSpeed(float speed);
-    void hitBorder(ofVec2f normal, float indexNewMedium);
+    bool hitBorder(ofVec2f normal, float indexNewMedium);
     float getRefractionIndex();
+    //ofPolyline getPath();
     ofVec2f getPosition();
+    void setPosition(ofPoint position);
     void update();
     void draw();
     
