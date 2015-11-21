@@ -4,13 +4,22 @@
 void ofApp::setup(){
     ofSetFrameRate(60);
     
+    ofSetVerticalSync(true);
+    
     // initialize prism and collider
     prism = new Prism(400, 200, 200, 0.1);
     collider = new PrismRayCollider(rays, *prism);
-}
+    
+    tuioClient.start(3333);
+    
+    ofAddListener(tuioClient.cursorAdded,this,&ofApp::tuioAdded);
+    ofAddListener(tuioClient.cursorRemoved,this,&ofApp::tuioRemoved);
+    ofAddListener(tuioClient.cursorUpdated,this,&ofApp::tuioUpdated);}
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    tuioClient.getMessage();
+
     prism->update();
     collider->update();
     
@@ -27,7 +36,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
     ofHideCursor();
     ofEnableAntiAliasing();
     ofBackground(20);
@@ -45,13 +54,20 @@ void ofApp::draw(){
 //    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
     ofPushStyle();
-    ofSetCircleResolution(1024);
-    ofSetColor(255, 0, 0);
-    ofDrawCircle(ofGetMouseX(), ofGetMouseY()-5, 10);
-    ofSetColor(0, 255, 0);
-    ofDrawCircle(ofGetMouseX()-5, ofGetMouseY()+5, 10);
-    ofSetColor(0, 0, 255);
-    ofDrawCircle(ofGetMouseX()+5, ofGetMouseY()+5, 10);
+    
+    for (auto cursor : tuioClient.getTuioCursors()){
+        int x = cursor->getX() * ofGetWidth();
+        int y = cursor->getY() * ofGetHeight();
+        ofSetCircleResolution(1024);
+        ofSetColor(255, 0, 0);
+        ofDrawCircle(x, y, 10);
+        ofSetColor(0, 255, 0);
+        ofDrawCircle(x-5, y+5, 10);
+        ofSetColor(0, 0, 255);
+        ofDrawCircle(x+5, y+5, 10);
+    }
+    
+
     ofPopStyle();
 
     
@@ -143,6 +159,44 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     rays.push_back(r);
 }
+
+void ofApp::tuioAdded(ofxTuioCursor &cursor){
+//    ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+//    cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
+    
+    finger_positions[cursor.getFingerId()] = ofPoint(cursor.getX() * ofGetWidth(), cursor.getY() * ofGetHeight());
+    
+}
+
+void ofApp::tuioUpdated(ofxTuioCursor &cursor){
+    ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
+    
+    // get the speed
+    if(finger_positions[cursor.getFingerId()] != ofPoint(0,0)){
+        ofVec2f speed = loc - finger_positions[cursor.getFingerId()];
+        ofVec2f acc = speed - finger_speed[cursor.getFingerId()];
+        finger_speed[cursor.getFingerId()] = speed;
+        
+        ofLog() << acc.length();
+    }
+    
+    finger_positions[cursor.getFingerId()] = loc;
+    
+//    cout << tuioCursor.getSessionId() << " " << tuioCursor.getMotionAccel() << endl;
+//    if(tuioCursor.getMotionAccel() > 100){
+//        tuioCursor.get
+//        ParticleRay r = ParticleRay(loc, ofVec2f(x- mouse_press_pos.x, y-mouse_press_pos.y));
+//        rays.push_back(r);
+//    }
+    
+//    cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
+}
+
+void ofApp::tuioRemoved(ofxTuioCursor &tuioCursor){
+    ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
+    cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
+}
+
 
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){
