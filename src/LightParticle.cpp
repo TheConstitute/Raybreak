@@ -150,17 +150,29 @@ void LightParticle::draw(){
     ofSetLineWidth(3);
     
     for(int i=0; i< points.size() - 1; i++){
+        bool allfaded = true;
+        
         if(points[i].alpha > 0){
+            allfaded = false;
+            
             if(splitted)
                 points[i].alpha -= 5.0;
             else
                 points[i].alpha -= 20.0;
             
+            if(points[i].alpha < 0) points[i].alpha = 0;
+            
             ofSetColor(color.r, color.g, color.b, points[i].alpha);
+
+            // verbinde den aktuellen und den nächsten punkt
             ofDrawLine(points[i].position, points[i+1].position);
         }
         
+        fadedOut = allfaded;
     }
+    
+    
+
 
     ofPopStyle();
 }

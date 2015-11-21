@@ -12,6 +12,19 @@ void ParticleRay::add(LightParticle particle){
     particles.push_back(particle);
 }
 
+ParticleRay::ParticleRay(ofPoint position, ofVec2f direction){
+    for(float i = 380; i<700; i+=5){
+            LightParticle p(position,
+                            direction.scale(10),
+                            1.0,
+                            i);
+            particles.push_back(p);
+    }
+    
+    is_dead = false;
+
+}
+
 void ParticleRay::remove(LightParticle p){
 //     ParticleRay* found = find(particles.begin(), particles.end(), p);
 //    particles.erase(find(particles.begin(), particles.end(), p));
@@ -82,8 +95,14 @@ vector<LightParticle>& ParticleRay::getParticles(){
 }
 
 void ParticleRay::update(){
-    for(auto& particle: particles){
-        // make the move
-        particle.update();
+    if(!is_dead){
+        bool allDead = true;
+        for(auto& particle: particles){
+            // make the move
+            particle.update();
+            if(!particle.isFadedOut()) allDead = false;
+        }
+        
+        is_dead = allDead;
     }
 }

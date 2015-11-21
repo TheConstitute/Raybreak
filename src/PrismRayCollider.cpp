@@ -14,15 +14,18 @@ PrismRayCollider::PrismRayCollider(vector<ParticleRay>& r, Prism& p) : rays(r), 
 
 void PrismRayCollider::update(){
     
-    vector<ParticleRay> newRays;
+//    vector<ParticleRay> newRays;
     
     for(auto& ray: rays){
         //ParticleRay ray = rays->at(r);
         
-        vector<LightParticle> abgespaltene;
+//        vector<LightParticle> abgespaltene;
         
         // loop throught the particles in the ray
         for(auto& particle: ray.getParticles()){
+            
+            // don't calculate anything for particles that are outside the view
+            if(particle.isOutsideViewport()) break;
             
             // loop through the lines of the prism
             for(int v = 0; v < prism.getVertices().size(); v++){
@@ -79,27 +82,27 @@ void PrismRayCollider::update(){
             }
         }
         
-        if(abgespaltene.size()>0){
-            //ofLog() << "abgespaltene partikel: " << abgespaltene.size();
-            ParticleRay newRay;
-            
-            for(int i = 0; i< abgespaltene.size(); i++){
-                newRay.add(abgespaltene[i]);
-                ray.remove(abgespaltene[i]);
-            }
-            newRays.push_back(newRay);
-        }
+//        if(abgespaltene.size()>0){
+//            //ofLog() << "abgespaltene partikel: " << abgespaltene.size();
+//            ParticleRay newRay;
+//            
+//            for(int i = 0; i< abgespaltene.size(); i++){
+//                newRay.add(abgespaltene[i]);
+//                ray.remove(abgespaltene[i]);
+//            }
+//            newRays.push_back(newRay);
+//        }
         
     }
 
-    // add all the new rays to the list
-    if(newRays.size() > 0){
-        //ofLog() << "new rays: " << newRays.size();
-        
-        for(auto ray: newRays){
-            rays.push_back(ray);
-        }
-    }
+//    // add all the new rays to the list
+//    if(newRays.size() > 0){
+//        //ofLog() << "new rays: " << newRays.size();
+//        
+//        for(auto ray: newRays){
+//            rays.push_back(ray);
+//        }
+//    }
 }
 
 float PrismRayCollider::getInterpolatedIndex(float wavelength){

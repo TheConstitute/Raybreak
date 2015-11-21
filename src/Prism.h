@@ -28,8 +28,7 @@ class Prism{
 public:    
     Prism(int offsetX, int offsetY, int edgeLength, float morphSpeed);
     void update();
-    void drawBackground();
-    void drawForeground();
+    void draw();
     vector<ofPoint>& getVertices();
     bool inside(float x, float y);
     

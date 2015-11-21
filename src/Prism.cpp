@@ -39,7 +39,7 @@ void Prism::update(){
     
     deformation += morph_speed;
     
-    if(abs(deformation) > 40)
+    if(deformation > 60 || deformation <= -40)
         morph_speed = -morph_speed;
     
 }
@@ -48,7 +48,7 @@ bool Prism::inside(float x, float y){
     return polyline.inside(x, y);
 }
 
-void Prism::drawBackground(){
+void Prism::draw(){
     ofPushStyle();
     
 //    ofMesh m;
@@ -125,18 +125,6 @@ void Prism::drawBackground(){
     
     ofPopStyle();
 }
-
-void Prism::drawForeground(){
-    ofPushStyle();
-    ofSetColor(210, 263, 252);
-    ofBeginShape();
-    for(auto vertex: polyline.getVertices()){
-        ofVertex(vertex);
-    }
-    ofEndShape();
-    ofPopStyle();
-}
-
 
 vector<ofPoint>& Prism::getVertices(){
     return polyline.getVertices();

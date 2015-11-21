@@ -57,6 +57,9 @@ public:
     float getWavelength();
     int getId() const;
     
+    bool isFadedOut(){return fadedOut;}
+    bool isOutsideViewport(){return outsideView;}
+    
     ofColor getColor();
     void setSpeed(float speed);
     bool hitBorder(ofVec2f normal, float indexNewMedium);

@@ -4,11 +4,6 @@
 void ofApp::setup(){
     ofSetFrameRate(60);
     
-    // choose the colors => also determines the number of rays
-    for(float i = 380; i<700; i+=5){
-        colors.push_back(i);
-    }
-    
     // initialize prism and collider
     prism = new Prism(400, 200, 200, 0.1);
     collider = new PrismRayCollider(rays, *prism);
@@ -19,9 +14,15 @@ void ofApp::update(){
     prism->update();
     collider->update();
     
-    for(auto& ray: rays){
-        ray.update();
+    for(int i = 0; i< rays.size(); i++){
+        rays[i].update();
+        
+        // kill dead rays
+        if(rays[i].isDead()){
+            rays.erase(rays.begin() + i);
+        }
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -39,11 +40,8 @@ void ofApp::draw(){
 //    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 //        ofEnableAlphaBlending();
 //    ofDisableBlendMode();
-    prism->drawBackground();
+    prism->draw();
 
-    
-    
-    
 //    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     
     ofPushStyle();
@@ -130,22 +128,18 @@ void ofApp::mouseReleased(int x, int y, int button){
 //    rays.push_back(ray);
     
     mouse_pressed = false;
-//    
-    ParticleRay r;
+ 
+    ParticleRay r = ParticleRay(ofPoint(x, y), ofVec2f(x- mouse_press_pos.x, y-mouse_press_pos.y));
     
-    for(int i=0; i< colors.size(); i++){
-
-        int rand_x = 0;//ofRandom(-5, 5);
-        int rand_y = 0;//ofRandom(-5, 5);
-        LightParticle p(ofPoint(x + rand_x, y + rand_y),
-                                             ofPoint(x + rand_x, y + rand_y) - ofPoint(mouse_press_pos.x + rand_x, mouse_press_pos.y + rand_y),
-                                             1.0,
-                                             //5 * (int) ofRandom(90, 130) // 450 bis 650nm
-                                             //               lightcolor
-                                             colors[i]);
-        p.setSpeed(10);
-        r.add(p);
-    }
+//    for(int i=0; i< colors.size(); i++){
+//
+//        LightParticle p(ofPoint(x, y),
+//                        ofPoint(x, y) - ofPoint(mouse_press_pos.x, mouse_press_pos.y),
+//                        1.0,
+//                        colors[i]);
+//        p.setSpeed(10);
+//        r.add(p);
+//    }
     
     rays.push_back(r);
 }
