@@ -27,6 +27,20 @@ void PrismRayCollider::update(){
             // don't calculate anything for particles that are outside the view
             if(particle.isOutsideViewport()) break;
             
+            // if the refraction index hasn't been set yet, find it out now
+            if(particle.getRefractionIndex() < 0){
+                if(prism.inside(particle.getPosition().x, particle.getPosition().y)){
+                    // spreizung der werte
+                    float f = (1- (particle.getWavelength() / 510.0)) * spread;
+                    
+                    //index = refraction_lookup[particle.getWavelength()] + f;
+                    particle.setRefractionIndex(getInterpolatedIndex(particle.getWavelength()) + f);
+                }
+                else
+                    particle.setRefractionIndex(1.0);
+            }
+            
+            
             // loop through the lines of the prism
             for(int v = 0; v < prism.getVertices().size(); v++){
                 ofPoint intersection;
@@ -49,7 +63,7 @@ void PrismRayCollider::update(){
                     // determine the refraction index of the new medium
                     float index = 1.0;
                     if(!prism.inside(particle.getPosition().x, particle.getPosition().y)){
-                        // is not inside the prism right now => set the new index to the prisms index
+                        // is not inside the prism right now => set the new index to the prism's index
                         
                         // spreizung der werte
                         float f = (1- (particle.getWavelength() / 510.0)) * spread;

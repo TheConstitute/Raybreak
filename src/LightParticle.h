@@ -57,6 +57,8 @@ public:
     float getWavelength();
     int getId() const;
     
+    void setRefractionIndex(float refractionIndex){ refraction_index = refractionIndex; }
+    
     bool isFadedOut(){return fadedOut;}
     bool isOutsideViewport(){return outsideView;}
     
