@@ -31,7 +31,6 @@ void ofApp::update(){
             rays.erase(rays.begin() + i);
         }
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -42,6 +41,7 @@ void ofApp::draw(){
     ofBackground(20);
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
+
     for(auto& ray: rays){
         ray.draw();
     }
@@ -52,22 +52,27 @@ void ofApp::draw(){
     prism->draw();
 
 //    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-    
+   
+    // draw the fingers
     ofPushStyle();
-    
-    for (auto cursor : tuioClient.getTuioCursors()){
-        int x = cursor->getX() * ofGetWidth();
-        int y = cursor->getY() * ofGetHeight();
+    for (auto f : finger){
+        if(f.active){
         ofSetCircleResolution(1024);
         ofSetColor(255, 0, 0);
-        ofDrawCircle(x, y, 10);
+        ofDrawCircle(f.position.x, f.position.y - 5, 10);
         ofSetColor(0, 255, 0);
-        ofDrawCircle(x-5, y+5, 10);
+        ofDrawCircle(f.position.x - 5, f.position.y + 5, 10);
         ofSetColor(0, 0, 255);
-        ofDrawCircle(x+5, y+5, 10);
+        ofDrawCircle(f.position.x + 5, f.position.y + 5, 10);
     }
-    
-
+        
+//        ofSetColor(255, 255, 255);
+//        ofDrawCircle(f.position, 10);
+//        
+//        ofSetColor(255, 0, 0);
+//        ofDrawLine(f.position, f.position + 5 * f.direction.getRotated(f.angleMean));
+        
+    }
     ofPopStyle();
 
     
@@ -163,24 +168,56 @@ void ofApp::mouseReleased(int x, int y, int button){
 void ofApp::tuioAdded(ofxTuioCursor &cursor){
 //    ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
 //    cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
-    
-    finger_positions[cursor.getFingerId()] = ofPoint(cursor.getX() * ofGetWidth(), cursor.getY() * ofGetHeight());
+
+    ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
+    finger[cursor.getFingerId()].update(loc);
     
 }
 
 void ofApp::tuioUpdated(ofxTuioCursor &cursor){
+    Finger& f = finger[cursor.getFingerId()];
+    
     ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
     
-    // get the speed
-    if(finger_positions[cursor.getFingerId()] != ofPoint(0,0)){
-        ofVec2f speed = loc - finger_positions[cursor.getFingerId()];
-        ofVec2f acc = speed - finger_speed[cursor.getFingerId()];
-        finger_speed[cursor.getFingerId()] = speed;
+    bool wasActive = f.active;
+    f.update(loc);
+
+    if(f.direction.length() > 20 && wasActive && ofGetElapsedTimeMillis() - f.lastTriggered > 400){
+        ParticleRay r = ParticleRay(f.position, f.direction);
+        rays.push_back(r);
+        f.lastTriggered = ofGetElapsedTimeMillis();
         
-        ofLog() << acc.length();
     }
     
-    finger_positions[cursor.getFingerId()] = loc;
+//    ofLog() << finger[cursor.getFingerId()].position << ", " << finger[cursor.getFingerId()].direction << ", " << finger[cursor.getFingerId()].direction.length();
+    
+//    if(abs(finger[cursor.getFingerId()].angleDeviation) > 60){
+////        ParticleRay r = ParticleRay(loc, finger_speed[cursor.getFingerId()]);
+////        ofDrawLine(f.position, f.direction.getRotated(f.angleMean));
+////        rays.push_back(r);
+//        ofLog() << "now";
+//    }
+    
+//        float angle = speed.angle(finger_speed[cursor.getFingerId()]);
+//        //ofLog() << "angle: " << angle;
+//        
+//        if(abs(angle) > 90 && finger_speed[cursor.getFingerId()] != ofVec2f(0,0)){
+//            //ofLog() << "richtungswechsel " << cursor.getFingerId();
+//            ParticleRay r = ParticleRay(loc, finger_speed[cursor.getFingerId()]);
+//            rays.push_back(r);
+//        }
+//        finger_speed[cursor.getFingerId()] = speed;
+        
+        
+//        float speed_f = loc.length() - finger_positions[cursor.getFingerId()].length();
+//        ofVec2f acc = speed - finger_speed[cursor.getFingerId()];
+//        float acc_f = speed_f - finger_speed[cursor.getFingerId()].length();
+
+//
+//        ofLog() << acc.length() << " " << acc_f;
+//    }
+//    
+//    finger_positions[cursor.getFingerId()] = loc;
     
 //    cout << tuioCursor.getSessionId() << " " << tuioCursor.getMotionAccel() << endl;
 //    if(tuioCursor.getMotionAccel() > 100){
@@ -192,9 +229,11 @@ void ofApp::tuioUpdated(ofxTuioCursor &cursor){
 //    cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
 }
 
-void ofApp::tuioRemoved(ofxTuioCursor &tuioCursor){
-    ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
-    cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
+void ofApp::tuioRemoved(ofxTuioCursor &cursor){
+    ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
+    //cout << "Finger " << cursor.getFingerId() << " removed" << endl;
+    
+    finger[cursor.getFingerId()].active = false;
 }
 
 
