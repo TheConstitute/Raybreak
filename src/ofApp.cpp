@@ -62,7 +62,7 @@ void ofApp::draw(){
     ofEnableAntiAliasing();
     ofBackground(20);
     
-//    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
 
     // draw rays
     for(auto& ray: rays){
