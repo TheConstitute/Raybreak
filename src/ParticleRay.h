@@ -21,8 +21,8 @@ private:
 
 public:
     ParticleRay(ofPoint position, ofVec2f direction);
-    void add(LightParticle particle);
-    void remove(LightParticle particle);
+//    void add(LightParticle particle);
+//    void remove(LightParticle particle);
     void update();
     vector<LightParticle>& getParticles();
     void draw();

@@ -167,13 +167,8 @@ void LightParticle::draw(){
             // verbinde den aktuellen und den nächsten punkt
             ofDrawLine(points[i].position, points[i+1].position);
         }
-        
         fadedOut = allfaded;
     }
-    
-    
-
-
     ofPopStyle();
 }
 
