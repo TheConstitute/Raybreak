@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ray.h"
 #include "LightParticle.h"
 #include "ParticleRay.h"
 #include "PrismRayCollider.h"

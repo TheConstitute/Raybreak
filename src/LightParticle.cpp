@@ -114,8 +114,6 @@ bool LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
         
         refraction_index = indexNewMedium;
         
-        //ofLog() << wavelength << ", " << refraction_index << ", " << direction.length();
-        
         return false;
     }
 }

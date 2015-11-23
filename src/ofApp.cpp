@@ -27,8 +27,6 @@ void ofApp::setup(){
     spreadCircle.resize(spreadCircle.getWidth()/4.5, spreadCircle.getHeight()/4.5);
     
     tstar.load("TSTAR-Headline.ttf", 12);
-//    franklinBook14.setLineHeight(18.0f);
-//    franklinBook14.setLetterSpacing(1.037);
 }
 
 

@@ -24,7 +24,6 @@
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
 		8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81967292BFC87A0144BD32C6 /* ofxOscSender.cpp */; };
-		A2892EA87E8CDCF1F3266B92 /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 205B328F6E837C7F3E8F6F93 /* ray.cpp */; };
 		ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADD194746185E2DA11468377 /* IpEndpointName.cpp */; };
 		AF9F9D044C130C46C7BCD0C3 /* LightParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1F0C70F8215FD1E7552D046 /* LightParticle.cpp */; };
 		B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */; };
@@ -76,14 +75,12 @@
 		17E65988300FBD9AAA2CD0CA /* ofxGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGui.h; path = ../../../addons/ofxGui/src/ofxGui.h; sourceTree = SOURCE_ROOT; };
 		1C0DA2561397A7DE0246858B /* ofxGuiGroup.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxGuiGroup.h; path = ../../../addons/ofxGui/src/ofxGuiGroup.h; sourceTree = SOURCE_ROOT; };
 		1FB4366CF71F3723C30D93F6 /* PrismRayCollider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = PrismRayCollider.cpp; path = src/PrismRayCollider.cpp; sourceTree = SOURCE_ROOT; };
-		205B328F6E837C7F3E8F6F93 /* ray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ray.cpp; path = src/ray.cpp; sourceTree = SOURCE_ROOT; };
 		20F35AFADAF0068B067E713F /* OscReceivedElements.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscReceivedElements.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h; sourceTree = SOURCE_ROOT; };
 		23640F57DF6C4BB6BFC5DA4C /* PacketListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = PacketListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/PacketListener.h; sourceTree = SOURCE_ROOT; };
 		2834D88A62CD23F3DE2C47D1 /* ofxButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxButton.h; path = ../../../addons/ofxGui/src/ofxButton.h; sourceTree = SOURCE_ROOT; };
 		2FD4B0329909D3527F003494 /* UdpSocket.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = UdpSocket.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h; sourceTree = SOURCE_ROOT; };
 		3B361208CD4107E479F04E7B /* NetworkingUtils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtils.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
 		444657A12E59D0ED86981498 /* TimerListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = TimerListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/TimerListener.h; sourceTree = SOURCE_ROOT; };
-		45EAC8F2CD3FB60E4D247D85 /* ray.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ray.h; path = src/ray.h; sourceTree = SOURCE_ROOT; };
 		4843F0B394DDECE50D6D03F5 /* Finger.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Finger.cpp; path = src/Finger.cpp; sourceTree = SOURCE_ROOT; };
 		48974F980F51769171D0B2F5 /* IpEndpointName.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = IpEndpointName.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h; sourceTree = SOURCE_ROOT; };
 		4E95FB446A9C9C6F0DE12D75 /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscPrintReceivedElements.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscPrintReceivedElements.h; sourceTree = SOURCE_ROOT; };
@@ -336,8 +333,6 @@
 				965E16093A7666A3E88676F4 /* Prism.h */,
 				1FB4366CF71F3723C30D93F6 /* PrismRayCollider.cpp */,
 				EC79DBC250CC8359D65622FB /* PrismRayCollider.h */,
-				205B328F6E837C7F3E8F6F93 /* ray.cpp */,
-				45EAC8F2CD3FB60E4D247D85 /* ray.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -468,7 +463,6 @@
 				DCB2AC219119C06C41BB6197 /* ParticleRay.cpp in Sources */,
 				0CCED3EE5F9F3C4BBEF79E5C /* Prism.cpp in Sources */,
 				C9348E3B02AAEAE4F895895E /* PrismRayCollider.cpp in Sources */,
-				A2892EA87E8CDCF1F3266B92 /* ray.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
