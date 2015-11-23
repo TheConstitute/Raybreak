@@ -21,8 +21,12 @@ public:
     void tuioRemoved(ofxTuioCursor & tuioCursor);
     void tuioUpdated(ofxTuioCursor & tuioCursor);
     
-    ofParameter<float> triggerTimeout = 400;
-    ofParameter<float> triggerSpeed = 20;
+    ofParameter<float> triggerTimeout;
+    ofParameter<float> triggerSpeed;
+    ofParameter<float> spread;
+    ofParameter<float> spreadSpeed = 0.1;
+    int spreadSpeed_sign = 1;
+
     
 private:
     vector<ParticleRay> rays;
@@ -41,5 +45,9 @@ private:
     ofxPanel gui;
     
     bool drawGui = false;
+    
+    ofImage spreadCircle;
+    
+    ofTrueTypeFont  tstar;
     
 };

@@ -20,6 +20,15 @@ void ofApp::setup(){
     gui.setup("settings"); // most of the time you don't need a name but don't forget to call setup
     gui.add(triggerTimeout.set("trigger timeout", 400, 0, 1000));
     gui.add(triggerSpeed.set( "trigger speed", 20, 1, 50));
+    gui.add(spread.set( "spread", 0.8, 0.0, 2.0));
+    gui.add(spreadSpeed.set( "spread speed", 0.001, 0, 0.005));
+    
+    spreadCircle.load("spreadcircle.png");
+    spreadCircle.resize(spreadCircle.getWidth()/4.5, spreadCircle.getHeight()/4.5);
+    
+    tstar.load("TSTAR-Headline.ttf", 12);
+//    franklinBook14.setLineHeight(18.0f);
+//    franklinBook14.setLetterSpacing(1.037);
 }
 
 
@@ -28,6 +37,8 @@ void ofApp::update(){
     tuioClient.getMessage();
 
     prism->update();
+    
+    collider->setSpread(spread);
     collider->update();
     
     for(int i = 0; i< rays.size(); i++){
@@ -38,18 +49,20 @@ void ofApp::update(){
             rays.erase(rays.begin() + i);
         }
     }
+    
+    spread += spreadSpeed_sign * spreadSpeed;
+    if(spread >= 2 || spread <= 0) spreadSpeed_sign *= -1;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     if(drawGui) ofShowCursor();
     else ofHideCursor();
     
     ofEnableAntiAliasing();
     ofBackground(20);
     
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
+//    ofEnableBlendMode(OF_BLENDMODE_ADD);
 
     // draw rays
     for(auto& ray: rays){
@@ -58,11 +71,27 @@ void ofApp::draw(){
 
     // draw prism
     prism->draw();
-   
+    
     // draw the fingers
     for (auto& f : finger){
         f.draw();
     }
+    
+    // draw spread display
+    ofPushStyle();
+    ofSetLineWidth(2);
+    spreadCircle.draw(ofGetWidth()/2 - spreadCircle.getWidth()/2, 50);
+    ofVec2f v(-1, 0);
+    v.rotate(spread/2.0 * 180);
+    v.normalize();
+    ofPoint c(ofGetWidth()/2, 89.25);
+    ofSetColor(255);
+    ofDrawLine(c + 10 * v, c + v * 45);
+    ofRectangle bounds = tstar.getStringBoundingBox(ofToString(spread.get(), 1), 0, 0);
+    tstar.drawString(ofToString(spread.get(), 1),
+                     (c + v * 60).x - (bounds.getWidth()/2.0),
+                     (c + v * 60).y + (bounds.getHeight()/2.0));
+    ofPopStyle();
     
     // draw debug stuff
     if(drawGui){

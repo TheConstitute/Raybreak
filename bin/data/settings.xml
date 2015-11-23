@@ -1,0 +1,6 @@
+<settings>
+	<trigger_timeout>400</trigger_timeout>
+	<trigger_speed>20</trigger_speed>
+	<spread>0.987696</spread>
+	<spread_speed>0.0002</spread_speed>
+</settings>

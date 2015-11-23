@@ -52,7 +52,7 @@ void PrismRayCollider::update(){
                         // is not inside the prism right now => set the new index to the prisms index
                         
                         // spreizung der werte
-                        float f = (1- (particle.getWavelength() / 510.0)) * 0.8;
+                        float f = (1- (particle.getWavelength() / 510.0)) * spread;
                         
                         //index = refraction_lookup[particle.getWavelength()] + f;
                         index = getInterpolatedIndex(particle.getWavelength()) + f;
@@ -71,38 +71,11 @@ void PrismRayCollider::update(){
                     // Position auf Kollisionsposition setzen
                     particle.setPosition(intersection);
                     
-                    bool totalreflexion = particle.hitBorder(normal, index);
-                    
-//                    if(totalreflexion){
-//                        ofLog() << "totalreflexion " << particle.getId();
-////                        particle.setWavelength(680);
-//                        abgespaltene.push_back(particle);
-//                    }
+                    particle.hitBorder(normal, index);
                 }
             }
         }
-        
-//        if(abgespaltene.size()>0){
-//            //ofLog() << "abgespaltene partikel: " << abgespaltene.size();
-//            ParticleRay newRay;
-//            
-//            for(int i = 0; i< abgespaltene.size(); i++){
-//                newRay.add(abgespaltene[i]);
-//                ray.remove(abgespaltene[i]);
-//            }
-//            newRays.push_back(newRay);
-//        }
-        
     }
-
-//    // add all the new rays to the list
-//    if(newRays.size() > 0){
-//        //ofLog() << "new rays: " << newRays.size();
-//        
-//        for(auto ray: newRays){
-//            rays.push_back(ray);
-//        }
-//    }
 }
 
 float PrismRayCollider::getInterpolatedIndex(float wavelength){

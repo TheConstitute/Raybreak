@@ -20,12 +20,14 @@ private:
     vector<ParticleRay>& rays;
     Prism& prism;
     std::map<int, float> refraction_lookup;
+    float spread = 0.8;
 
     void initLookup();
     float getInterpolatedIndex(float wavelength);
     
 public:
     PrismRayCollider(vector<ParticleRay>& rays, Prism& prism);
+    void setSpread(float s){spread = s;}
     void update();
     
 };
