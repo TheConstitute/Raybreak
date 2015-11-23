@@ -1,3 +1,4 @@
+ofxDmx
 ofxGui
 ofxOsc
 ofxTuio

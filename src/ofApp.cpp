@@ -27,6 +27,9 @@ void ofApp::setup(){
     spreadCircle.resize(spreadCircle.getWidth()/4.5, spreadCircle.getHeight()/4.5);
     
     tstar.load("TSTAR-Headline.ttf", 12);
+    
+    //LEDFrame setup
+    ledFrame.setup();
 }
 
 
@@ -34,11 +37,16 @@ void ofApp::setup(){
 void ofApp::update(){
     tuioClient.getMessage();
 
+    // update the prism's shape
     prism->update();
     
+    // update the collider and the spread of the refraction
     collider->setSpread(spread);
     collider->update();
+    spread += spreadSpeed_sign * spreadSpeed;
+    if(spread >= 2 || spread <= 0) spreadSpeed_sign *= -1;
     
+    // update rays
     for(int i = 0; i< rays.size(); i++){
         rays[i].update();
         
@@ -48,8 +56,13 @@ void ofApp::update(){
         }
     }
     
-    spread += spreadSpeed_sign * spreadSpeed;
-    if(spread >= 2 || spread <= 0) spreadSpeed_sign *= -1;
+    // DMX UPDATE
+    if (ledFrame.getEnabled()) {
+        ledFrame.updateLevel();
+        ledFrame.update();
+    }
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -112,11 +125,16 @@ void ofApp::keyReleased(int key){
     }
 }
 
+//--------------------------------------------------------------
 void ofApp::tuioAdded(ofxTuioCursor &cursor){
     ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
     finger[cursor.getFingerId()].update(loc);
+    
+    ledFrame.stopPulsing();
+    ledFrame.updateLastPointsTime();
 }
 
+//--------------------------------------------------------------
 void ofApp::tuioUpdated(ofxTuioCursor &cursor){
     Finger& f = finger[cursor.getFingerId()];
     
@@ -130,8 +148,17 @@ void ofApp::tuioUpdated(ofxTuioCursor &cursor){
         rays.push_back(r);
         f.triggered();
     }
+    
+    ledFrame.stopPulsing();
+    ledFrame.updateLastPointsTime();
 }
 
+//--------------------------------------------------------------
 void ofApp::tuioRemoved(ofxTuioCursor &cursor){
     finger[cursor.getFingerId()].deactivate();
+}
+
+//--------------------------------------------------------------
+void ofApp::exit(){
+    ledFrame.disconnect();
 }

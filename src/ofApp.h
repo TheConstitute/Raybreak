@@ -8,6 +8,7 @@
 #include "ofxTuio.h"
 #include "Finger.h"
 #include "ofxGui.h"
+#include "LEDFrame.h"
 
 
 class ofApp : public ofBaseApp{
@@ -19,6 +20,7 @@ public:
     void tuioAdded(ofxTuioCursor & tuioCursor);
     void tuioRemoved(ofxTuioCursor & tuioCursor);
     void tuioUpdated(ofxTuioCursor & tuioCursor);
+    void exit();
     
     ofParameter<float> triggerTimeout;
     ofParameter<float> triggerSpeed;
@@ -49,4 +51,6 @@ private:
     
     ofTrueTypeFont  tstar;
     
+    //LEDFrame and lighting
+    LEDFrame ledFrame;
 };
