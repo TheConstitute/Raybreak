@@ -22,7 +22,7 @@ void LEDFrame::setup() {
     
     dmx.connect(0);
     
-    setColor(ofColor::fromHsb(0,255,10));
+    setColor(ofColor::fromHsb(255,255,255));
     update();
     
     pulsing = true;
