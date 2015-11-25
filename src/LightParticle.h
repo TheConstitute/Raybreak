@@ -17,13 +17,6 @@ class LightParticle {
 private:
     static int last_id;
     
-    const int particle_id;
-    float wavelength;
-    ofPoint position;
-    ofVec2f direction;
-    ofColor color;
-    float refraction_index;
-    
     struct Punkt {
         ofPoint position;
         long timestamp;
@@ -31,18 +24,20 @@ private:
         Punkt(ofPoint p){ position = p; timestamp = ofGetElapsedTimeMillis(); alpha = 255; }
     };
     
+    int particle_id;
+    float wavelength;
+    ofPoint position;
+    ofVec2f direction;
+    ofColor color;
+    float refraction_index;
     vector<Punkt> points;
-    
     long lastIntersection;
     long creationTime;
-    float diameter = 10;
-    
     bool splitted = false;
-
-    ofColor waveLengthToRGB(double Wavelength);
-    
     bool outsideView = false;
     bool fadedOut = false;
+    
+    ofColor waveLengthToRGB(double Wavelength);
     
 public:
     LightParticle();

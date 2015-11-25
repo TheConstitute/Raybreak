@@ -35,6 +35,9 @@ LightParticle::LightParticle(const LightParticle& lp) : particle_id(lp.particle_
     creationTime = lp.creationTime;
     lastIntersection = lp.lastIntersection;
     points = lp.points;
+    splitted = lp.splitted;
+    outsideView = lp.outsideView;
+    fadedOut = lp.fadedOut;
 }
 
 bool LightParticle::operator==(const LightParticle &p){
@@ -48,6 +51,7 @@ bool LightParticle::operator==(const LightParticle &p){
 
 LightParticle& LightParticle::operator=(const LightParticle &lp){
     if(this != &lp){
+        particle_id = lp.particle_id;
         position = lp.position;
         wavelength = lp.wavelength;
         refraction_index = lp.refraction_index;
@@ -56,6 +60,9 @@ LightParticle& LightParticle::operator=(const LightParticle &lp){
         creationTime = lp.creationTime;
         lastIntersection = lp.lastIntersection;
         points = lp.points;
+        splitted = lp.splitted;
+        outsideView = lp.outsideView;
+        fadedOut = lp.fadedOut;
     }
     return *this;
 }
@@ -149,7 +156,6 @@ void LightParticle::draw(){
     
     for(int i=0; i< points.size() - 1; i++){
         bool allfaded = true;
-        
         if(points[i].alpha > 0){
             allfaded = false;
             
@@ -162,7 +168,7 @@ void LightParticle::draw(){
             
             ofSetColor(color.r, color.g, color.b, points[i].alpha);
 
-            // verbinde den aktuellen und den nächsten punkt
+            // verbinde den aktuellen und den naechsten punkt
             ofDrawLine(points[i].position, points[i+1].position);
         }
         fadedOut = allfaded;
