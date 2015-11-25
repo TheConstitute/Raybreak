@@ -11,6 +11,7 @@
 Prism::Prism(int offsetX, int offsetY, int edgeLength, float morphSpeed){
 
     morph_speed = morphSpeed;
+    edge_length = edgeLength;
     
     vector<ofPoint> vertices(6);
     
@@ -28,6 +29,27 @@ Prism::Prism(int offsetX, int offsetY, int edgeLength, float morphSpeed){
     ofLineSegmentIntersection(vertices[MIDDLE_LEFT], vertices[RIGHT], vertices[LEFT], vertices[MIDDLE_RIGHT], center);
     
     polyline.addVertices(vertices);
+    
+    polyline.close();
+}
+
+void Prism::setPosition(int offsetX, int offsetY){  
+    deformation = 0;
+    
+    vector<ofPoint>& vertices = polyline.getVertices();
+    
+    vertices[TOP].set(edge_length/2 + offsetX, offsetY);
+    int y = sqrt(pow(edge_length,2) - pow((edge_length/2), 2));
+    vertices[LEFT].set(offsetX, y + offsetY);
+    vertices[RIGHT].set(offsetX + edge_length, y + offsetY);
+    //    p4.set(200, 600);
+    
+    // middle values
+    vertices[MIDDLE_LEFT].set((vertices[LEFT] - vertices[TOP])/2 + vertices[TOP]);
+    vertices[MIDDLE_BOTTOM].set((vertices[RIGHT] - vertices[LEFT])/2 + vertices[LEFT]);
+    vertices[MIDDLE_RIGHT].set((vertices[TOP] - vertices[RIGHT])/2 + vertices[RIGHT]);
+    
+    ofLineSegmentIntersection(vertices[MIDDLE_LEFT], vertices[RIGHT], vertices[LEFT], vertices[MIDDLE_RIGHT], center);
     
     polyline.close();
 }

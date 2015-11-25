@@ -24,12 +24,14 @@ class Prism{
     float morph_speed;
     ofPolyline polyline;
     ofPoint center;
+    int edge_length;
     
 public:    
     Prism(int offsetX, int offsetY, int edgeLength, float morphSpeed);
     void update();
     void draw();
     vector<ofPoint>& getVertices();
+    void setPosition(int offsetX, int offsetY);
     bool inside(float x, float y);
     
 };
