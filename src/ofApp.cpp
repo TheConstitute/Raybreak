@@ -22,6 +22,10 @@ void ofApp::setup(){
     gui.add(triggerSpeed.set( "trigger speed", 20, 1, 50));
     gui.add(spread.set( "spread", 0.8, 0.0, 2.0));
     gui.add(spreadSpeed.set( "spread speed", 0.001, 0, 0.005));
+    gui.add(particleSpeed.set( "particle speed", 10.0, 1.0, 30.0));
+    gui.add(fullscreen.setup("fullscreen"));
+    fullscreen.addListener(this,&ofApp::fullscreenPressed);
+    
     
     spreadCircle.load("spreadcircle.png");
     spreadCircle.resize(spreadCircle.getWidth()/4.5, spreadCircle.getHeight()/4.5);
@@ -32,6 +36,14 @@ void ofApp::setup(){
     ledFrame.setup();
 }
 
+//--------------------------------------------------------------
+void ofApp::fullscreenPressed(){
+    ofToggleFullscreen();
+}
+
+void ofApp::windowResized(int w, int h){
+    prism->setPosition(w/2 - 100, h/2 - 120);
+}
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -50,10 +62,11 @@ void ofApp::update(){
     for(int i = 0; i< rays.size(); i++){
         rays[i].update();
         
+        // don't kill dead rays, reuse them instead!!
         // kill dead rays
-        if(rays[i].isDead()){
-            rays.erase(rays.begin() + i);
-        }
+//        if(rays[i].isDead()){
+//            rays.erase(rays.begin() + i);
+//        }
     }
     
     // DMX UPDATE
@@ -77,7 +90,9 @@ void ofApp::draw(){
 
     // draw rays
     for(auto& ray: rays){
-        ray.draw();
+        if(!ray.isDead()){
+            ray.draw();
+        }
     }
 
     // draw prism
@@ -144,9 +159,22 @@ void ofApp::tuioUpdated(ofxTuioCursor &cursor){
     f.update(loc);
     
     if(f.getDirection().length() > triggerSpeed && wasActive && f.getTimeSinceLastTriggered() > triggerTimeout){
-        ParticleRay r = ParticleRay(f.getPosition(), f.getDirection());
-        rays.push_back(r);
         f.triggered();
+        ParticleRay r = ParticleRay(f.getPosition(), f.getDirection().scale(particleSpeed));
+        
+        // check if we need to create a new ray or if an old one can be reused
+        // this could very well be coded more efficiently...
+        int i = 0;
+        for(i = 0; i< rays.size(); i++){
+            if(rays[i].isDead()){
+                break;
+            }
+        }
+        if(i < rays.size()){
+            rays[i] = r;
+        } else{
+            rays.push_back(r);
+        }
     }
     
     ledFrame.stopPulsing();

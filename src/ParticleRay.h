@@ -21,6 +21,7 @@ private:
 
 public:
     ParticleRay(ofPoint position, ofVec2f direction);
+    ParticleRay& operator=(const ParticleRay &p);
     void update();
     vector<LightParticle>& getParticles();
     void draw();

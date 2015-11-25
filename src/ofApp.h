@@ -17,6 +17,7 @@ public:
     void update();
     void draw();
     void keyReleased(int key);
+    void windowResized(int w, int h);
     void tuioAdded(ofxTuioCursor & tuioCursor);
     void tuioRemoved(ofxTuioCursor & tuioCursor);
     void tuioUpdated(ofxTuioCursor & tuioCursor);
@@ -26,6 +27,8 @@ public:
     ofParameter<float> triggerSpeed;
     ofParameter<float> spread;
     ofParameter<float> spreadSpeed = 0.1;
+    ofParameter<float> particleSpeed = 10.0;
+    ofxButton fullscreen;
     int spreadSpeed_sign = 1;
 
     
@@ -53,4 +56,6 @@ private:
     
     //LEDFrame and lighting
     LEDFrame ledFrame;
+    
+    void fullscreenPressed();
 };
