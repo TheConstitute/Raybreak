@@ -1,6 +1,8 @@
 <settings>
-	<trigger_timeout>400</trigger_timeout>
+	<trigger_timeout>475</trigger_timeout>
 	<trigger_speed>20</trigger_speed>
-	<spread>0.987696</spread>
+	<spread>1.13831</spread>
 	<spread_speed>0.0002</spread_speed>
+	<particle_speed>10</particle_speed>
+	<dmx_port>tty.usbserial-EN118363</dmx_port>
 </settings>
