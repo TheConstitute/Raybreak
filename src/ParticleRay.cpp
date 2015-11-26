@@ -40,12 +40,12 @@ vector<LightParticle>& ParticleRay::getParticles(){
     return particles;
 }
 
-void ParticleRay::update(){
+void ParticleRay::update(long deltaTime){
     if(!is_dead){
         bool allDead = true;
         for(auto& particle: particles){
             // make the move
-            particle.update();
+            particle.update(deltaTime);
             if(!particle.isFadedOut()) allDead = false;
         }
         

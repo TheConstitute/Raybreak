@@ -88,7 +88,12 @@ int LightParticle::getId() const{
     return particle_id;
 }
 
-bool LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
+bool LightParticle::hitBorder(ofPoint position, ofVec2f normal, float indexNewMedium){
+
+    splitted = true;
+    
+    // Position auf Kollisionsposition setzen
+    setPosition(position);
     
     lastIntersection = ofGetElapsedTimeMillis();
     
@@ -100,7 +105,6 @@ bool LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
     // totalreflexion?
     if(indexNewMedium < refraction_index &&
        fabs(angle) > asin(indexNewMedium/refraction_index) * (180.0/PI)){
-        
         // winkel nach totalreflexion. einfallswinkel = ausfallswinkel
         direction.rotate(-2.0*(90.0-angle));
         
@@ -108,8 +112,6 @@ bool LightParticle::hitBorder(ofVec2f normal, float indexNewMedium){
     }
     
     else{
-        splitted = true;
-        
         // calculate new direction
         double new_angle = asin( (refraction_index/indexNewMedium) * sin((PI/180.0) * angle)) * (180.0/PI);
         
@@ -129,7 +131,7 @@ ofVec2f LightParticle::getPosition(){
     return position;
 }
 
-void LightParticle::update(){
+void LightParticle::update(long deltaTime){
     if(!outsideView){
         // check if particle is outside the view
         if(position.x > ofGetWidth() || position.x < 0 || position.y > ofGetHeight() || position.y < 0){
@@ -137,13 +139,13 @@ void LightParticle::update(){
             return;
         }
         
-        this->position += direction;
-        points.push_back(Punkt(position));
+        this->position += direction.getScaled((float)deltaTime / 1.666666666667);
+        points.push_back(Punkt(position, splitted));
     }
 }
 
 void LightParticle::setPosition(ofPoint pos){
-    points.push_back(Punkt(pos));
+    points.push_back(Punkt(pos, splitted));
     position = pos;
 }
 
@@ -154,15 +156,19 @@ void LightParticle::draw(){
 
     ofSetLineWidth(3);
     
+    bool allfaded = true;
+    
     for(int i=0; i< points.size() - 1; i++){
-        bool allfaded = true;
         if(points[i].alpha > 0){
             allfaded = false;
             
-            if(splitted)
-                points[i].alpha -= 5.0;
-            else
+            if(points[i].afterSplitting){
+                points[i].alpha -= 8.0;
+            }
+            else {
+                ofSetColor(0, 255, 0);
                 points[i].alpha -= 20.0;
+            }
             
             if(points[i].alpha < 0) points[i].alpha = 0;
             
@@ -171,8 +177,14 @@ void LightParticle::draw(){
             // verbinde den aktuellen und den naechsten punkt
             ofDrawLine(points[i].position, points[i+1].position);
         }
-        fadedOut = allfaded;
     }
+    
+    // only assign this if we already have points in the list!
+    // don't kill the particle before it has moved
+    if(points.size() > 2)
+        fadedOut = allfaded;
+    
+    
     ofPopStyle();
 }
 

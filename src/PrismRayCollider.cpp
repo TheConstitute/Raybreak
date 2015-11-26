@@ -81,11 +81,8 @@ void PrismRayCollider::update(){
                     if(fabs(normal.angle(particle.getDirection())) < 90){
                         normal.rotate(180);
                     }
-                    
-                    // Position auf Kollisionsposition setzen
-                    particle.setPosition(intersection);
-                    
-                    particle.hitBorder(normal, index);
+                                        
+                    particle.hitBorder(intersection, normal, index);
                 }
             }
         }

@@ -33,6 +33,7 @@ public:
     ofxButton fullscreen;
     int spreadSpeed_sign = 1;
 
+    long lastUpdate;
     
 private:
     vector<ParticleRay> rays;

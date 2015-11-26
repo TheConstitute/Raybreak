@@ -52,6 +52,9 @@ void ofApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    long deltaTime = ofGetElapsedTimeMillis() - lastUpdate;
+    
     tuioClient.getMessage();
 
     // update the prism's shape
@@ -65,7 +68,7 @@ void ofApp::update(){
     
     // update rays
     for(int i = 0; i< rays.size(); i++){
-        rays[i].update();
+        rays[i].update(deltaTime);
         
         // don't kill dead rays, reuse them instead!!
         // kill dead rays
@@ -80,7 +83,7 @@ void ofApp::update(){
         ledFrame.update();
     }
     
-    
+    lastUpdate = ofGetElapsedTimeMillis();
 }
 
 //--------------------------------------------------------------
@@ -89,7 +92,7 @@ void ofApp::draw(){
     else ofHideCursor();
     
     ofEnableAntiAliasing();
-    ofBackground(20);
+    ofBackground(0);
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
 
@@ -162,9 +165,12 @@ void ofApp::tuioUpdated(ofxTuioCursor &cursor){
     
     ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
     
+    // save the active value because it will be overwritten after the update
     bool wasActive = f.isActive();
+
     f.update(loc);
     
+    // make a new ray if the speed is high enough, the finger was active and if the finger hasn't triggered anything lately
     if(f.getDirection().length() > triggerSpeed && wasActive && f.getTimeSinceLastTriggered() > triggerTimeout){
         f.triggered();
         ParticleRay r = ParticleRay(f.getPosition(), f.getDirection().scale(particleSpeed));

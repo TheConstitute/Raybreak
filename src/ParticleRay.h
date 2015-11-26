@@ -22,7 +22,7 @@ private:
 public:
     ParticleRay(ofPoint position, ofVec2f direction);
     ParticleRay& operator=(const ParticleRay &p);
-    void update();
+    void update(long deltaTime = 0.01666666666667); // standard time is 1/60s
     vector<LightParticle>& getParticles();
     void draw();
     bool isDead(){return is_dead;}

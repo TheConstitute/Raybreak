@@ -21,7 +21,8 @@ private:
         ofPoint position;
         long timestamp;
         float alpha;
-        Punkt(ofPoint p){ position = p; timestamp = ofGetElapsedTimeMillis(); alpha = 255; }
+        bool afterSplitting;
+        Punkt(ofPoint p, bool s = false){ position = p; timestamp = ofGetElapsedTimeMillis(); alpha = 255; afterSplitting = s; }
     };
     
     int particle_id;
@@ -59,12 +60,12 @@ public:
     
     ofColor getColor();
     void setSpeed(float speed);
-    bool hitBorder(ofVec2f normal, float indexNewMedium);
+    bool hitBorder(ofPoint position, ofVec2f normal, float indexNewMedium);
     float getRefractionIndex();
     //ofPolyline getPath();
     ofVec2f getPosition();
     void setPosition(ofPoint position);
-    void update();
+    void update(long deltaTime = 0.01666666666667);
     void draw();
     
 };
