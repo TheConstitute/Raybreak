@@ -34,6 +34,9 @@ void ofApp::setup(){
     
     //LEDFrame setup
     ledFrame.setup();
+    
+    //Syphon stuff
+    syphonMainOut.setName("Raybreak Main Out");
 }
 
 //--------------------------------------------------------------
@@ -118,6 +121,8 @@ void ofApp::draw(){
                      (c + v * 60).x - (bounds.getWidth()/2.0),
                      (c + v * 60).y + (bounds.getHeight()/2.0));
     ofPopStyle();
+    
+    syphonMainOut.publishScreen();
     
     // draw debug stuff
     if(drawGui){

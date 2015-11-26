@@ -9,6 +9,7 @@
 #include "Finger.h"
 #include "ofxGui.h"
 #include "LEDFrame.h"
+#include "ofxSyphon.h"
 
 
 class ofApp : public ofBaseApp{
@@ -56,6 +57,9 @@ private:
     
     //LEDFrame and lighting
     LEDFrame ledFrame;
+    
+    // syphon
+    ofxSyphonServer syphonMainOut;
     
     void fullscreenPressed();
 };
