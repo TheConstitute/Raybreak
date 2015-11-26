@@ -25,7 +25,9 @@ void ofApp::setup(){
     gui.add(particleSpeed.set( "particle speed", 10.0, 1.0, 30.0));
     gui.add(fullscreen.setup("fullscreen"));
     fullscreen.addListener(this,&ofApp::fullscreenPressed);
+    gui.add(dmx_port.set("dmx_port", "tty.usbserial-0020111D"));
     
+    gui.loadFromFile("settings.xml");
     
     spreadCircle.load("spreadcircle.png");
     spreadCircle.resize(spreadCircle.getWidth()/4.5, spreadCircle.getHeight()/4.5);
@@ -33,7 +35,7 @@ void ofApp::setup(){
     tstar.load("TSTAR-Headline.ttf", 12);
     
     //LEDFrame setup
-    ledFrame.setup();
+    ledFrame.setup(dmx_port);
     
     //Syphon stuff
     syphonMainOut.setName("Raybreak Main Out");

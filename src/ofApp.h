@@ -29,6 +29,7 @@ public:
     ofParameter<float> spread;
     ofParameter<float> spreadSpeed = 0.1;
     ofParameter<float> particleSpeed = 10.0;
+    ofParameter<string> dmx_port;
     ofxButton fullscreen;
     int spreadSpeed_sign = 1;
 

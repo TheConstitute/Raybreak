@@ -36,11 +36,13 @@ private:
     
 public:
     void setup();
+    void setup(string device);
     void disconnect();
     void updateLevel();
     void startPulsing();
     void stopPulsing();
     void setColor(ofColor _color);
+    void setColor(int r, int g, int b);
     void update();
     
     bool getEnabled() { return enabled;}
