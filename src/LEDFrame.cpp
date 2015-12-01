@@ -75,21 +75,36 @@ void LEDFrame::stopPulsing() {
 
 //--------------------------------------------------------------
 void LEDFrame::updateLevel() {
+    
+    if(ofGetElapsedTimef() - last_points_time > 3){
+        if(level<lower_pulsing_limit)
+            pulsing_speed = fabs(pulsing_speed);
+        else if (level > upper_pulsing_limit)
+            pulsing_speed = - fabs(pulsing_speed);
+        
+        level+=pulsing_speed;
+    }
+    else {
+        level = upper_pulsing_limit;
+    }
+    
+//    ofLog() << ofGetElapsedTimef() - last_points_time << " " << level;
+    
     //create triangle wave for pulsing led lights
-    int time = abs(((int)ofGetElapsedTimeMillis() % (pulsing_time*2)) - pulsing_time);
+//    int time = abs(((int)ofGetElapsedTimeMillis() % (pulsing_time*2)) - pulsing_time);
     
     //check how long no point has been added
-    if (ofGetElapsedTimeMillis() - last_points_time > 500 && !pulsing)
-    {
-        level -= 0.01;
-        float new_level = ofMap(time, 0, pulsing_time, lower_pulsing_limit, upper_pulsing_limit);
-        if (level - new_level < 0)
-            startPulsing();
-    }
-    if (pulsing) {
-        //int time = abs(((int)ofGetElapsedTimeMillis() % (LED_pulsing_time*2)) - LED_pulsing_time);
-        level = ofMap(time, 0, pulsing_time, lower_pulsing_limit, upper_pulsing_limit);
-    }
+//    if (ofGetElapsedTimeMillis() - last_points_time > 500 && !pulsing)
+//    {
+//        level -= 0.01;
+//        float new_level = ofMap(time, 0, pulsing_time, lower_pulsing_limit, upper_pulsing_limit);
+//        if (level - new_level < 0)
+//            startPulsing();
+//    }
+//    if (pulsing) {
+//        //int time = abs(((int)ofGetElapsedTimeMillis() % (LED_pulsing_time*2)) - LED_pulsing_time);
+//        level = ofMap(time, 0, pulsing_time, lower_pulsing_limit, upper_pulsing_limit);
+//    }
     
 }
 

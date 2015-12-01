@@ -33,6 +33,7 @@ private:
     unsigned char ired, igreen, iblue;
     
     bool pulsing;
+    float pulsing_speed = 0.005;
     
 public:
     void setup();
@@ -49,7 +50,7 @@ public:
     void setEnabled(bool _enabled) { enabled = _enabled;}
     void toggleEnabled() {enabled = !enabled;}
     
-    void updateLastPointsTime() {last_points_time = ofGetElapsedTimef();}
+    void updateLastPointsTime() {last_points_time = ofGetElapsedTimef(); }
     float getLastPointsTime() {return last_points_time;}
 };
 

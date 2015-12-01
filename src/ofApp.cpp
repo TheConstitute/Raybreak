@@ -78,10 +78,8 @@ void ofApp::update(){
     }
     
     // DMX UPDATE
-    if (ledFrame.getEnabled()) {
-        ledFrame.updateLevel();
-        ledFrame.update();
-    }
+    ledFrame.updateLevel();
+    ledFrame.update();
     
     lastUpdate = ofGetElapsedTimeMillis();
 }
@@ -158,7 +156,6 @@ void ofApp::tuioAdded(ofxTuioCursor &cursor){
     ofPoint loc = ofPoint(cursor.getX()*ofGetWidth(),cursor.getY()*ofGetHeight());
     finger[cursor.getFingerId()].update(loc);
     
-    ledFrame.stopPulsing();
     ledFrame.updateLastPointsTime();
 }
 
@@ -193,7 +190,7 @@ void ofApp::tuioUpdated(ofxTuioCursor &cursor){
         }
     }
     
-    ledFrame.stopPulsing();
+//    ledFrame.stopPulsing();
     ledFrame.updateLastPointsTime();
 }
 
