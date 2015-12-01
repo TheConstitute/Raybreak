@@ -113,6 +113,8 @@ void ofApp::draw(){
     
     // draw spread display
     ofPushStyle();
+    ofPushMatrix();
+    ofTranslate(0, 500);
     ofSetLineWidth(2);
     spreadCircle.draw(ofGetWidth()/2 - spreadCircle.getWidth()/2, 50);
     ofVec2f v(-1, 0);
@@ -125,6 +127,7 @@ void ofApp::draw(){
     tstar.drawString(ofToString(spread.get(), 1),
                      (c + v * 60).x - (bounds.getWidth()/2.0),
                      (c + v * 60).y + (bounds.getHeight()/2.0));
+    ofPopMatrix();
     ofPopStyle();
     
     syphonMainOut.publishScreen();
