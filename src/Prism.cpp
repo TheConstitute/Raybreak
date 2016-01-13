@@ -74,7 +74,8 @@ void Prism::draw(){
     ofPushStyle();
         
     ofBeginShape();
-    ofSetColor(120, 180, 255, 230);
+//    ofSetColor(120, 180, 255, 230);
+    ofSetColor(223, 233, 240, 230);
     for(auto vertex: polyline.getVertices()){
         ofVertex(vertex);
     }
@@ -86,24 +87,30 @@ void Prism::draw(){
     ofMesh m;
     m.setMode(OF_PRIMITIVE_LINE_LOOP);
     m.addVertex(polyline[TOP]);
-    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+//    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
     
     m.addVertex(polyline[MIDDLE_LEFT]);
-    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+//    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
     
     m.addVertex(polyline[LEFT]);
-    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+//    m.addColor(ofFloatColor(58.0/255.0, 191.0/255.0, 239.0/255.0, 0.8));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
 
     m.addVertex(polyline[MIDDLE_BOTTOM]);
-    m.addColor(ofFloatColor(180.0/255.0, 242.0/255.0, 249.0/255.0, 0.8));
+//    m.addColor(ofFloatColor(180.0/255.0, 242.0/255.0, 249.0/255.0, 0.8));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
     
     m.addVertex(polyline[RIGHT]);
-    m.addColor(ofFloatColor(1, 1, 1, 0.5));
+//    m.addColor(ofFloatColor(1, 1, 1, 0.5));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
     
     m.addVertex(polyline[MIDDLE_RIGHT]);
-    m.addColor(ofFloatColor(180.0/255.0, 242.0/255.0, 249.0/255.0, 0.8));
+//    m.addColor(ofFloatColor(180.0/255.0, 242.0/255.0, 249.0/255.0, 0.8));
+    m.addColor(ofFloatColor(16.0/255.0, 12.0/255.0, 130.0/255.0, 0.8));
 
-    m.draw();
+//    m.draw();
     
     ofPopStyle();
 }
