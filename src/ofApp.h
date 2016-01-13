@@ -22,6 +22,8 @@ public:
     void tuioAdded(ofxTuioCursor & tuioCursor);
     void tuioRemoved(ofxTuioCursor & tuioCursor);
     void tuioUpdated(ofxTuioCursor & tuioCursor);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
     void exit();
     
     ofParameter<float> triggerTimeout;
@@ -31,6 +33,7 @@ public:
     ofParameter<float> particleSpeed = 10.0;
     ofParameter<string> dmx_port;
     ofxButton fullscreen;
+    ofxToggle mouseMode;
     int spreadSpeed_sign = 1;
 
     long lastUpdate;
@@ -40,8 +43,9 @@ private:
     PrismRayCollider* collider;
     
     bool mouse_pressed = false;
-    Prism* prism;
     ofPoint mouse_press_pos;
+    
+    Prism* prism;
 
     vector<float> colors;
 

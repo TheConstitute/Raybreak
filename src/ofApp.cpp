@@ -23,6 +23,7 @@ void ofApp::setup(){
     gui.add(spread.set( "spread", 0.8, 0.0, 2.0));
     gui.add(spreadSpeed.set( "spread speed", 0.001, 0, 0.005));
     gui.add(particleSpeed.set( "particle speed", 10.0, 1.0, 30.0));
+    gui.add(mouseMode.setup("mouse mode", false));
     gui.add(fullscreen.setup("fullscreen"));
     fullscreen.addListener(this,&ofApp::fullscreenPressed);
     gui.add(dmx_port.set("dmx_port", "tty.usbserial-0020111D"));
@@ -86,7 +87,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if(drawGui) ofShowCursor();
+    if(drawGui || mouseMode) ofShowCursor();
     else ofHideCursor();
     
     ofEnableAntiAliasing();
@@ -203,3 +204,34 @@ void ofApp::tuioRemoved(ofxTuioCursor &cursor){
 void ofApp::exit(){
     ledFrame.disconnect();
 }
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+    mouse_press_pos.set(x, y);
+    mouse_pressed = true;
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+    mouse_pressed = false;
+    
+    ParticleRay r = ParticleRay(ofPoint(x, y), ofPoint(x - mouse_press_pos.x, y - mouse_press_pos.y).scale(particleSpeed));
+    
+    // check if we need to create a new ray or if an old one can be reused
+    // this could very well be coded more efficiently...
+    int i = 0;
+    for(i = 0; i< rays.size(); i++){
+        if(rays[i].isDead()){
+            break;
+        }
+    }
+    if(i < rays.size()){
+        rays[i] = r;
+    } else{
+        rays.push_back(r);
+    }
+    
+    ledFrame.updateLastPointsTime();
+}
+
+
